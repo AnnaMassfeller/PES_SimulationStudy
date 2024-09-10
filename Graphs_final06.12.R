@@ -9,6 +9,7 @@ library(RColorBrewer)
 library(stringr)
 library(tidyverse)
 library(ggbreak)
+library(scales)
 display.brewer.pal(n = 9,name ="Spectral")
 #cols <- (YlGn(8)[-8])
 
@@ -317,18 +318,23 @@ BiodivGain_aP0L_ABS <- test.batch.all %>% filter(type == "A",Ch != 0,x!= 0, Cl !
  scale_fill_gradientn(name = "Biodiversity gain",
                       breaks=c(0,0.5,0.9),
                       colours = (hcl.colors(7, palette = "Spectral")))+
- scale_x_discrete(breaks = c("0.1", "0.5", "0.9"))+
+ scale_x_discrete(breaks = c("0.2", "0.5", "0.8"))+
  scale_y_discrete(breaks = c("1", "5", "10"))+
  xlab("")+
  ylab("Level of sensitivity to action (a)")+
  theme_bw()+
  theme(legend.position = "none")+
- facet_nested(type~., labeller = labeller(type = type.labs)) 
-                                          #robot = robot.labs, a = a.labs, d = d.labs, 
-                                          #Pv = Pv.labs, 
-                                          #Cl = CL.labs
-                                          #Ch = Ch.labs
- #))
+ facet_nested(type~., labeller = labeller(type = type.labs))+
+ theme(
+  text = element_text(size = 16),          # Overall text size
+  axis.title = element_text(size = 18),    # Axis titles
+  axis.text = element_text(size = 14),     # Axis labels
+  legend.text = element_text(size = 14),   # Legend text
+  legend.title = element_text(size = 16),  # Legend title
+  strip.text = element_text(size = 16)     # Facet labels
+ )
+                                          
+ggsave("BiodivGain_aP0L_ABS.png",device='png', dpi=800, width = 10, height = 6, units = "cm")
 
 BiodivGain_aP0L_RBS <- test.batch.all %>% filter(type == "O",Ch != 0,x!= 0, Cl != 0, 
                                                     d == 0.9,
@@ -343,18 +349,26 @@ BiodivGain_aP0L_RBS <- test.batch.all %>% filter(type == "O",Ch != 0,x!= 0, Cl !
  scale_fill_gradientn(name = "Biodiversity gain",
                       breaks=c(0,0.5,0.9),
                       colours = (hcl.colors(7, palette = "Spectral")))+
- scale_x_discrete(breaks = c("0.1", "0.5", "0.9"))+
+ scale_x_discrete(breaks = c("0.2", "0.5", "0.8"))+
  scale_y_discrete(breaks = c("1", "5", "10"))+
  xlab("")+
  ylab("Level of sensitivity to action (a)")+
  theme_bw()+
- theme(legend.position = "none")+
-facet_nested(type~., labeller = labeller(type = type.labs))  
-                                          #robot = robot.labs, a = a.labs, d = d.labs, 
-                                          #Pv = Pv.labs, 
-                                          #Cl = CL.labs
-                                          #Ch = Ch.labs
-# ))
+ theme(legend.position = "right")+
+facet_nested(type~., labeller = labeller(type = type.labs))+
+ theme(
+  text = element_text(size = 16),          # Overall text size
+  axis.title = element_text(size = 18),    # Axis titles
+  axis.text = element_text(size = 14),     # Axis labels
+  legend.text = element_text(size = 14),   # Legend text
+  legend.title = element_text(size = 16),  # Legend title
+  strip.text = element_text(size = 16)     # Facet labels
+ )
+
+ggsave("BiodivGain_aP0L_RBS.png",device='png', dpi=800, width = 10, height = 6, units = "cm")
+
+ggarrange(BiodivGain_aP0L_ABS,BiodivGain_aP0L_RBS, nrow = 2)
+ggsave("ABS_RBS.png", device = "png", dpi = 800)
 
 #plot level of action
 Level_allParam_ABSRBS <- test.batch.all %>% filter(Ch != 0,x!= 0, Cl != 0, 
@@ -627,13 +641,22 @@ Comp_BiodivGain_aP0L_ABSRBS<- df.compare_type_all %>% filter (d == 0.9, Ch == 10
                        labels=c("ABS higher","no difference","RBS higher"))+
   ylab("Level of sensitivity to action (a)") +
   xlab("Probability of biodiversity occuring on patch (P0)")+
-  scale_x_discrete(breaks = c("0.1", "0.5", "0.9"))+
+  scale_x_discrete(breaks = c("0.2", "0.5", "0.8"))+
   scale_y_discrete(breaks = c("1", "5", "10"))+
   #scale_y_break(breaks = c(5,8))+
   theme_bw()+
   theme(legend.position = "none")+
-  facet_nested(Comp~., labeller = labeller(Comp = Comp.labs))
- 
+  facet_nested(Comp~., labeller = labeller(Comp = Comp.labs))+
+  theme(
+  text = element_text(size = 16),          # Overall text size
+  axis.title = element_text(size = 18),    # Axis titles
+  axis.text = element_text(size = 14),     # Axis labels
+  legend.text = element_text(size = 14),   # Legend text
+  legend.title = element_text(size = 16),  # Legend title
+  strip.text = element_text(size = 16)     # Facet labels
+  )
+ggsave("Comp_BiodivGain_aP0L_ABSRBS.png",device='png', dpi=800)
+
 
 ggarrange(BiodivGain_aP0L_ABS, BiodivGain_aP0L_RBS, Comp_BiodivGain_aP0L_ABSRBS, nrow = 3)
 
@@ -719,6 +742,8 @@ Eff_a_d_Cl
 
 
 #y = Ch
+a.labs.reverse <- c("a = 10", "a = 1","a = 2/3")
+names(a.labs.reverse) <- c("10", "1","0.666666666666667")
 Eff_a_d_Ch <-df.compare_type_all %>% filter (Cl == 100, Pv == 0.6,
                                 d %in% c(0.1, 0.5, 0.9),a %in% c(0.666666666666667,1,10)) %>% 
  ggplot()+ 
@@ -728,13 +753,86 @@ Eff_a_d_Ch <-df.compare_type_all %>% filter (Cl == 100, Pv == 0.6,
                       ,breaks=c(0.0002,0,- 0.0002),
                       #limits=c(1, - 1),
                       labels=c("ABS higher","no difference","RBS higher"))+
- ylab("Cost of agency monitoring/ h (Ch)") +
- xlab("Probability of biodiversity occuring on patch (P0)")+
+ #ylab("Cost of agency monitoring/ h (Ch)") +
+# xlab("Probability of biodiversity occuring on patch (P0)")+
+ scale_x_discrete(breaks = c("0.2", "0.5", "0.8"))+
+ scale_y_discrete(breaks = c("4", "8", "12", "16", "20"))+
+ theme(legend.position="right")+
+ theme_bw()+
+ facet_grid(rev(a) ~ d,labeller = labeller(type = type.labs, robot = robot.labs, rev(a) = a.labs.reverse, d = d.labs, Pv = Pv.labs))+
+ theme(
+  text = element_text(size = 16),          # Overall text size
+  axis.title = element_text(size = 18),    # Axis titles
+  axis.text = element_text(size = 14),     # Axis labels
+  legend.text = element_text(size = 14),   # Legend text
+  legend.title = element_text(size = 16),  # Legend title
+  strip.text = element_text(size = 16)     # Facet labels
+ )
+
+#updated version
+# Convert 'a' into a factor and reverse its levels
+df.compare_type_all <- df.compare_type_all %>%
+ mutate(a = factor(a, levels = c(10, 1, 0.666666666666667)))  # Reverse levels
+
+a.labs.reverse <- c("a = 10", "a = 1", "a = 2/3")
+names(a.labs.reverse) <- c("10", "1", "0.666666666666667")
+
+
+Eff_a_d_Ch <- df.compare_type_all %>%
+ filter(Cl == 100, Pv == 0.6, d %in% c(0.1, 0.5, 0.9), a %in% c(0.666666666666667, 1, 10)) %>%
+ ggplot() +
+ geom_raster(aes(y = Ch, x = p0, fill = delta_R)) +
+ scale_fill_gradient2(
+  na.value = "red",
+  low = '#D53E4F',
+  high = '#3288BD',
+  mid = "#FFFFBF",
+  name = "Difference in Efficiency",
+  midpoint = 0,
+  breaks = c(0.0002, 0, -0.0002),
+  labels = c("ABS higher", "no difference", "RBS higher")
+ ) +
+ scale_x_discrete(breaks = c("0.2", "0.5", "0.8")) +
+ scale_y_discrete(breaks = c("4", "8", "12", "16", "20")) +
+ theme(legend.position = "right") +
+ theme_bw() +
+ facet_grid(a ~ d, labeller = labeller(a = a.labs.reverse, d = d.labs, Pv = Pv.labs)) +  # No need to reverse 'a' here
+ theme(
+  text = element_text(size = 16),
+  axis.title = element_text(size = 18),
+  axis.text = element_text(size = 14),
+  legend.text = element_text(size = 14),
+  legend.title = element_text(size = 16),
+  strip.text = element_text(size = 16)
+ )
+Eff_a_d_Ch
+ggsave("Eff_a_d_Ch_en.png",device='png', dpi=1000, width = 22, height = 15, units = "cm")
+
+#in german for poster
+a.labs_de <- c("niedrig", "mittel","hoch")
+names(a.labs_de) <- c("0.666666666666667", "1", "10") #0.666666666666667
+
+d.labs_de <- c("niedrig","mittel","hoch")
+names(d.labs_de) <- c("0.1","0.5","0.9")
+
+Eff_a_d_Ch_de <-df.compare_type_all %>% filter (Cl == 100, Pv == 0.6,
+                                             d %in% c(0.1, 0.5, 0.9),a %in% c(0.666666666666667,1,10)) %>% 
+ ggplot()+ 
+ geom_raster(aes(y=Ch, x = p0, fill = delta_R))+
+ scale_fill_gradient2(na.value = "red",low = '#D53E4F', high = '#3288BD',mid = "#FFFFBF",
+                      name = "Unterschied in Effizienz", midpoint = 0
+                      ,breaks=c(0.0002,0,- 0.0002),
+                      #limits=c(1, - 1),
+                      labels=c("PO-AUKMs höher","kein Unterschied","EO-AUKMs höher"))+
+ ylab("Monitoringkosten/Stunde") +
+ xlab("Wahrscheinlichkeit, dass Biodiversität bereits vor Maßnahme auf Feld")+
  scale_x_discrete(breaks = c("0.1", "0.5", "0.9"))+
  theme(legend.position="right")+
  theme_bw()+
- facet_grid(a ~ d,labeller = labeller(type = type.labs, robot = robot.labs, a = a.labs, d = d.labs, Pv = Pv.labs))
-Eff_a_d_Ch
+ facet_grid(a ~ d,labeller = labeller(type = type.labs, robot = robot.labs, a = a.labs_de, d = d.labs_de, Pv = Pv.labs))
+Eff_a_d_Ch_de
+
+ggsave("Eff_a_d_Ch_de.png",device='png', dpi=800)
 
 #check finally for interaction between Cl, Ch and Pv (i.e. fix a and d)
 Eff_Ch_d_Pv <- df.compare_type_all %>% filter (a %in% c(0.666666666666667,1,10), d %in% c(0.1, 0.5, 0.9),
