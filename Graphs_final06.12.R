@@ -153,7 +153,7 @@ maxGain_allParam_ABSRBS <- test.batch.all %>% filter(Ch != 0,x!= 0, Cl != 0,
                           Pv %in% c(0.2, 0.6, 1),
                           Cl %in% c(50,100,200),
                           Ch %in% c(2,10,20),
-                         a %in% c(0.666666666666667,1,10)
+                         a %in% c(0.667,1,10)
                           ) %>% 
  ggplot()+
  geom_tile(aes(y=d, x = interaction(p0,sep = "!"), fill = B))+
@@ -205,7 +205,7 @@ Biodiv_aP0L_ABSRBS <- test.batch.all %>% filter(Ch != 0,x!= 0, Cl != 0,
                                                 d == 0.9,
                                                 Ch ==10,
                                                 x == 10,
-                                                 a %in% c(0.666666666666667,1,10)
+                                                 a %in% c(0.667,1,10)
 )%>% 
  ggplot()+
  geom_point(size=3,aes(y=L, x = interaction(p0,sep = "!"), colour = B, shape = type))+
@@ -354,7 +354,7 @@ BiodivGain_aP0L_RBS <- test.batch.all %>% filter(type == "O",Ch != 0,x!= 0, Cl !
  xlab("")+
  ylab("Level of sensitivity to action (a)")+
  theme_bw()+
- theme(legend.position = "right")+
+ theme(legend.position = "none")+
 facet_nested(type~., labeller = labeller(type = type.labs))+
  theme(
   text = element_text(size = 16),          # Overall text size
@@ -695,7 +695,7 @@ df.compare_type_all %>% filter (a == 1, d == 0.5,Ch %in% c(2,10,20),Cl %in% c(25
  xlab("Probability of benefit occuring on patch (P0)")+
  scale_x_discrete(breaks = c("0.1", "0.5", "0.9"))+
  theme(legend.position="right")+
- facet_grid(Ch ~ Cl,labeller = labeller(type = type.labs, robot = robot.labs, a = a.labs, d = d.labs, Pv = Pv.labs, cccc))
+ facet_grid(Ch ~ Cl,labeller = labeller(type = type.labs, robot = robot.labs, a = a.labs, d = d.labs, Pv = Pv.labs))
 
 
 #Efficiency
