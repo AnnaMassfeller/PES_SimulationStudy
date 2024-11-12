@@ -229,14 +229,9 @@ batch.act_robot <- function(a=a, p0=p0,
  out
 }
 
-
-
+#RBS
 batch.opt_robot <- function(a=a, p0=p0, 
                             x.mult=x.mult, db=db, v=0.95, Cl = Cl, Ch = Ch) {
- 
- #Lopt.batch <- function(params) {
- #	unlist(Lopt(p0=params[2], a=params[1], x.mult=params[3]))
- #}
  
  out <- expand.grid(a=a, p0=p0, x=x.mult, db=db, Cl = Cl, Ch = Ch)
  out$L <- NA
@@ -304,21 +299,18 @@ test.batch.act_AM_robot_Lfunc_rangea2 <- batch.act_robot(dc = seq(0.1,0.9, by = 
                                                          Pv = seq(0.2, 1, by = 0.2))
 
 #takes long therefore comment out if not needed
-#test.batch.opt_AM_robot_Lfunc_rangea <- batch.opt_robot(db = seq(0.1,0.9, by = 0.2),
-                                                       # a=seq((1/3),10, by = (1/3)),
-                                                       # p0=seq(0.1, 0.9, by=0.1), 
-                                                       # x.mult=seq(5, 50, by=5), 
-                                                       # Cl = seq(25, 200, by=25),
-                                                       # Ch = seq(2, 20, by=2))
+test.batch.opt_AM_robot_Lfunc_rangea <- batch.opt_robot(db = seq(0.1,0.9, by = 0.2),
+                                                       a=seq((1/3),10, by = (1/3)),
+                                                       p0=seq(0.1, 0.9, by=0.1), 
+                                                       x.mult=seq(5, 50, by=5), 
+                                                       Cl = seq(25, 200, by=25),
+                                                       Ch = seq(2, 20, by=2))
 
 
-#save old versions with old l.func
-#test.batch.act_AM_robot_oldlfunc <- test.batch.act_AM
-#test.batch.opt_AM_robot_oldlfunc <- test.batch.opt_AM
 
 #call versions with new lfunc such that we can easily work with them
 test.batch.act_AM_robot<- test.batch.act_AM_robot_Lfunc_rangea2
-#test.batch.opt_AM_robot<- test.batch.opt_AM_robot_Lfunc_rangea
+test.batch.opt_AM_robot<- test.batch.opt_AM_robot_Lfunc_rangea
 
 
 #bind three version together
